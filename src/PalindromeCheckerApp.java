@@ -1,32 +1,43 @@
 import java.util.Scanner;
 import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
 public class PalindromeCheckerApp {
     public static void main(string[] args){
         Scanner scanner = new Scanner(System.in);
-        Stack<Character> stack = new Stack<>();
-
         System.out.print("Enter a string: ");
         String input = scanner.nextLine();
 
-        // Convert to lowercase for case-insensitive comparison
-        String original = input.toLowerCase();
-        String reversed = "";
+        // Normalize input (optional)
+        input = input.replaceAll("\\s+", "").toLowerCase();
 
-        // Push characters into stack
-        for (int i = 0; i < original.length(); i++) {
-            stack.push(original.charAt(i));
+        Queue<Character> queue = new LinkedList<>();
+        Stack<Character> stack = new Stack<>();
+
+        // Step 1: Enqueue and Push characters
+        for (char ch : input.toCharArray()) {
+            queue.add(ch);      // Enqueue
+            stack.push(ch);     // Push
         }
 
-        // Pop characters to reverse string
-        while (!stack.isEmpty()) {
-            reversed += stack.pop();
+        boolean isPalindrome = true;
+
+        // Step 2: Compare dequeue and pop
+        while (!queue.isEmpty()) {
+            char fromQueue = queue.remove();   // Dequeue (FIFO)
+            char fromStack = stack.pop();      // Pop (LIFO)
+
+            if (fromQueue != fromStack) {
+                isPalindrome = false;
+                break;
+            }
         }
 
-        // Compare original and reversed
-        if (original.equals(reversed)) {
-            System.out.println("Result: It is a Palindrome.");
+        // Step 3: Result
+        if (isPalindrome) {
+            System.out.println("The string is a Palindrome.");
         } else {
-            System.out.println("Result: It is NOT a Palindrome.");
+            System.out.println("The string is NOT a Palindrome.");
         }
 
         scanner.close();
